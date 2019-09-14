@@ -53,26 +53,28 @@ class DealershipVehicleRepository(
                     var dealershipIds = hashSetOf<Int>()
                     vehicleIds.forEach { vehicleId ->
                         val vehicleDetail = getVehicleDetail(dataSetId, vehicleId)
+                        val dealerId = vehicleDetail.dealerId
+                        if (!dealershipIds.contains(dealerId)) {
+                            //Get all the dealerships (this can be launched in parallel)
+                            scope.launch {
+                                val dealershipDetail =
+                                    getDealershipDetail(dataSetId, dealerId)
+                                //Insert Dealership Detail into the database
+                                insert(dealershipDetail)
+                            }
+                        }
+                        //Add to our dealership id set
+                        dealershipIds.add(dealerId)
+
                         //Insert the vehicle detail into the database
                         insert(vehicleDetail)
-                        //Add to our dealership id list
-                        dealershipIds.add(vehicleDetail.dealerId)
                     }
 
-                    //Get all the dealerships
-                    dealershipIds.forEach { dealershipId ->
-                        val dealershipDetail = getDealershipDetail(dataSetId, dealershipId)
-                        //Insert Dealership Detail into the database
-                        insert(dealershipDetail)
-                    }
-
-                    status.value = Status(false, null)
+                    status.postValue(Status(false, null))
                 }
             } catch (ex: Exception) {
                 Log.d(TAG, "Error: Unable to Load Dealership Vehicle Data: ${ex.message}")
-                withContext(Dispatchers.Main) {
-                    status.value = Status(false, ex)
-                }
+                status.postValue(Status(false, ex))
             }
         }
     }
@@ -145,12 +147,20 @@ class DealershipVehicleRepository(
     //region Room Database calls
     @WorkerThread
     suspend fun insert(dealership: Dealership) {
-        dealershipDao.insert(dealership)
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                dealershipDao.insert(dealership)
+            }
+        }
     }
 
     @WorkerThread
     suspend fun insert(vehicle: Vehicle) {
-        vehicleDao.insert(vehicle)
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                vehicleDao.insert(vehicle)
+            }
+        }
     }
     //endregion
 

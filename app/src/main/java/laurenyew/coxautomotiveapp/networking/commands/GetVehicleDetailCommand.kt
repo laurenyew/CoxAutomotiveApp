@@ -36,7 +36,7 @@ class GetVehicleDetailCommand(private val dataSetId: String, private val vehicle
     private fun parseResponse(response: Response<VehicleItemResponse>?): Vehicle {
         val data = response?.body()
         if (response?.code() != 200 || data == null) {
-            throw RuntimeException("API call failed. Unable to find vehicle detail for id: $vehicleId")
+            throw RuntimeException("API call failed. Unable to find vehicle detail for datasetid: $dataSetId, vehicleid: $vehicleId")
         } else {
             return Vehicle(
                 data.id,

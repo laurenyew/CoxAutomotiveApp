@@ -1,4 +1,4 @@
-package laurenyew.coxautomotiveapp.networking
+package laurenyew.coxautomotiveapp.networking.api
 
 import androidx.annotation.VisibleForTesting
 import com.squareup.moshi.KotlinJsonAdapterFactory
@@ -19,14 +19,17 @@ import java.util.*
  * Resource: https://futurestud.io/tutorials/retrofit-2-how-to-trust-unsafe-ssl-certificates-self-signed-expired
  */
 object CoxAutomotiveApiBuilder {
-    private const val BASE_URL = "http://api.coxauto-interview.com/api"
+    private const val BASE_URL = "http://api.coxauto-interview.com/api/"
     private val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val okHttpClient: OkHttpClient.Builder
     private val retrofit: Retrofit
 
     init {
-        okHttpClient = setupOkHttp()
-        retrofit = Retrofit.Builder().baseUrl(BASE_URL)
+        okHttpClient =
+            setupOkHttp()
+        retrofit = Retrofit.Builder().baseUrl(
+            BASE_URL
+        )
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(okHttpClient.build()).build()
     }

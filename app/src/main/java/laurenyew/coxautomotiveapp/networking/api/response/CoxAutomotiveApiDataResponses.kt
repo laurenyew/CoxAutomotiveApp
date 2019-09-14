@@ -8,7 +8,7 @@ import com.squareup.moshi.Json
  * Using Moshi to parse Json
  */
 data class DataSetIdResponse(
-    @Json(name = "id") val id: String
+    @Json(name = "datasetId") val id: String
 )
 
 data class VehicleIdsResponse(

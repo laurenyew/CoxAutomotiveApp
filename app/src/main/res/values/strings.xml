@@ -3,7 +3,6 @@
     <string name="view_dealerships_button">View Dealerships</string>
     <string name="choose_a_dealership_text">Choose A Dealership</string>
     <string name="empty_dealerships_text">No Dealerships Found</string>
-    <string name="error">Error</string>
     <string name="error_loading_dealerships">Unable to load dealerships from server. Please try again.</string>
     <string name="error_loading_vehicles">Unable to lead vehicles from server. Please try again.</string>
 </resources>

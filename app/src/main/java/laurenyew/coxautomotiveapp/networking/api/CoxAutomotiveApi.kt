@@ -17,7 +17,7 @@ interface CoxAutomotiveApi {
      * Get the Dataset id (used to query the server for all info)
      */
     @Throws(RuntimeException::class)
-    @GET("datasetId")
+    @GET("datasetid")
     fun getDataSetId(): Call<DataSetIdResponse?>?
 
     /**
@@ -32,7 +32,7 @@ interface CoxAutomotiveApi {
      * Get Vehicle Details
      */
     @Throws(RuntimeException::class)
-    @GET("{datasetId}/vehicle/{vehicleId}")
+    @GET("{datasetId}/vehicles/{vehicleId}")
     fun getVehicleDetail(@Path("datasetId") dataSetId: String, @Path("vehicleId") vehicleId: Int)
             : Call<VehicleItemResponse>?
 

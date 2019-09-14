@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -57,6 +58,18 @@ class DealershipsListFragment : Fragment() {
                 dealershipsListRecyclerView.adapter = adapter
             }
             adapter?.updateData(it)
+            emptyTextView.visibility =
+                if (it.isEmpty()
+                    && dealershipViewModel.status.value?.loading == false
+                ) View.VISIBLE else View.GONE
+        })
+
+        dealershipViewModel.status.observe(this, Observer {
+            loadingProgressBar.visibility = if (it.loading) View.VISIBLE else View.GONE
+            it.error?.let {
+                Toast.makeText(context, R.string.error_loading_dealerships, Toast.LENGTH_LONG)
+                    .show()
+            }
         })
     }
 }

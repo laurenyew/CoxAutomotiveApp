@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Dealership::class], version = 1)
+@Database(entities = [Vehicle::class], version = 1)
 public abstract class VehicleRoomDatabase : RoomDatabase() {
     abstract fun vehicleDao(): VehicleDao
 

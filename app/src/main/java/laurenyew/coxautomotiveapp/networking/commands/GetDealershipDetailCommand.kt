@@ -36,7 +36,7 @@ class GetDealershipDetailCommand(private val dataSetId: String, private val deal
     private fun parseResponse(response: Response<DealershipItemResponse>?): Dealership {
         val data = response?.body()
         if (response?.code() != 200 || data == null) {
-            throw RuntimeException("API call failed. Unable to find dealership for id $dealerId")
+            throw RuntimeException("API call failed. Unable to find dealership for datasetid: $dataSetId, id $dealerId")
         } else {
             return Dealership(data.id, data.name)
         }

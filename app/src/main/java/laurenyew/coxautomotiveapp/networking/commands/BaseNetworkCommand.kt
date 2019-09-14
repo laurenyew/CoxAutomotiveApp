@@ -3,7 +3,7 @@ package laurenyew.coxautomotiveapp.networking.commands
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import laurenyew.coxautomotiveapp.networking.CoxAutomotiveApiBuilder
+import laurenyew.coxautomotiveapp.networking.api.CoxAutomotiveApiBuilder
 import laurenyew.coxautomotiveapp.networking.api.CoxAutomotiveApi
 import kotlin.coroutines.CoroutineContext
 

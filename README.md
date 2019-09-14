@@ -1,5 +1,7 @@
 # CoxAutomotiveApp
 
+<img src="https://github.com/laurenyew/CoxAutomotiveApp/blob/master/Screenshots/Home.png" width="200" height="400" /> <img src="https://github.com/laurenyew/CoxAutomotiveApp/blob/master/Screenshots/Dealerships.png" width="200" height="400" /> <img src="https://github.com/laurenyew/CoxAutomotiveApp/blob/master/Screenshots/Vehicles.png" width="200" height="400" /> 
+
 ## Requirements:
 The app should persist dealer and vehicle data and load that cached data when possible (assume individual dealer and vehicle records provided by API are immutable)
 

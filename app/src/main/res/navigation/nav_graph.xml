@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/homePageFragment">
+
+    <fragment
+            android:id="@+id/homePageFragment"
+            android:name="laurenyew.coxautomotiveapp.HomePageFragment"
+            android:label="fragment_home_page"
+            tools:layout="@layout/fragment_home_page" >
+        <action
+                android:id="@+id/action_homePageFragment_to_dealershipsListFragment"
+                app:destination="@id/dealershipsListFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/dealershipsListFragment"
+            android:name="laurenyew.coxautomotiveapp.views.dealership.DealershipsListFragment"
+            android:label="fragment_dealerships_list"
+            tools:layout="@layout/fragment_dealerships_list" >
+        <action
+                android:id="@+id/action_dealershipsListFragment_to_vehicleListFragment"
+                app:destination="@id/vehicleListFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/vehicleListFragment"
+            android:name="laurenyew.coxautomotiveapp.views.VehicleListFragment"
+            android:label="fragment_vehicle_list"
+            tools:layout="@layout/fragment_vehicle_list" />
+</navigation>

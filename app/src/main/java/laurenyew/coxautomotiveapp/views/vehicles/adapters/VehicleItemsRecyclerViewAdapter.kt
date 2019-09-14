@@ -1,4 +1,4 @@
-package laurenyew.coxautomotiveapp.views.dealership.adapters
+package laurenyew.coxautomotiveapp.views.vehicles.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,30 +6,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
 import laurenyew.coxautomotiveapp.R
-import laurenyew.coxautomotiveapp.data.Dealership
-import laurenyew.coxautomotiveapp.views.dealership.adapters.data.DealershipItemDataDiffCallback
-import laurenyew.coxautomotiveapp.views.dealership.adapters.viewholder.DealershipItemViewHolder
+import laurenyew.coxautomotiveapp.data.Vehicle
+import laurenyew.coxautomotiveapp.views.vehicles.adapters.data.VehicleItemDataDiffCallback
+import laurenyew.coxautomotiveapp.views.vehicles.adapters.viewholder.VehicleItemViewHolder
 import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 /**
  * @author Lauren Yew
  *
- * RecyclerViewAdapter for showing the dealership items
+ * RecyclerViewAdapter for showing the vehicle items
  * With performance updates (update only parts of list that have changed)
  */
-class DealershipItemsRecyclerViewAdapter(private val dealerItemClicked: (dealerId: Int) -> Unit) :
-    RecyclerView.Adapter<DealershipItemViewHolder>(), CoroutineScope {
+class VehicleItemsRecyclerViewAdapter() :
+    RecyclerView.Adapter<VehicleItemViewHolder>(), CoroutineScope {
 
     private val job = Job()
-    private var data: MutableList<Dealership> = ArrayList()
-    private var pendingDataUpdates = ArrayDeque<List<Dealership>>()
+    private var data: MutableList<Vehicle> = ArrayList()
+    private var pendingDataUpdates = ArrayDeque<List<Vehicle>>()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + job
 
     //RecyclerView Diff.Util (List Updates)
-    fun updateData(newData: List<Dealership>?) {
+    fun updateData(newData: List<Vehicle>?) {
         if (isActive) {
             val data = newData ?: ArrayList()
             pendingDataUpdates.add(data)
@@ -49,7 +49,7 @@ class DealershipItemsRecyclerViewAdapter(private val dealerItemClicked: (dealerI
      * Handle the diff util update on a background thread
      * (this can take O(n) time so we don't want it on the main thread)
      */
-    private fun updateDataInternal(newData: List<Dealership>?) {
+    private fun updateDataInternal(newData: List<Vehicle>?) {
         val oldData = ArrayList(data)
 
         launch {
@@ -68,7 +68,7 @@ class DealershipItemsRecyclerViewAdapter(private val dealerItemClicked: (dealerI
      * and take in the latest update
      */
     private fun applyDataDiffResult(
-        newData: List<Dealership>?,
+        newData: List<Vehicle>?,
         diffResult: DiffUtil.DiffResult
     ) {
         if (pendingDataUpdates.isNotEmpty()) {
@@ -91,26 +91,26 @@ class DealershipItemsRecyclerViewAdapter(private val dealerItemClicked: (dealerI
     }
 
     private fun createDataDiffCallback(
-        oldData: List<Dealership>?,
-        newData: List<Dealership>?
+        oldData: List<Vehicle>?,
+        newData: List<Vehicle>?
     ): DiffUtil.Callback =
-        DealershipItemDataDiffCallback(oldData, newData)
+        VehicleItemDataDiffCallback(oldData, newData)
     //endregion
 
     //region RecyclerView.Adapter
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DealershipItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VehicleItemViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.dealership_item_preview_view, parent, false)
-        return DealershipItemViewHolder(view)
+            .inflate(R.layout.vehicle_item_preview_view, parent, false)
+        return VehicleItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: DealershipItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VehicleItemViewHolder, position: Int) {
         val item = data[position]
-        holder.dealershipItemIdTextView.text = item.id.toString()
-        holder.dealershipItemNameTextView.text = item.name
-        holder.view.setOnClickListener {
-            dealerItemClicked(item.id)
-        }
+        holder.yearTextView.text = item.year.toString()
+        holder.makeTextView.text = item.make
+        holder.modelTextView.text = item.model
+        holder.vehicleIdTextView.text = item.id.toString()
+        holder.dealershipIdTextView.text = item.dealerId.toString()
     }
 
     override fun getItemCount(): Int = data.size

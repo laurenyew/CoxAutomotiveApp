@@ -3,6 +3,14 @@
     <string name="view_dealerships_button">View Dealerships</string>
     <string name="choose_a_dealership_text">Choose A Dealership</string>
     <string name="empty_dealerships_text">No Dealerships Found</string>
+    <string name="vehicle_list_text">Vehicles</string>
+    <string name="empty_vehicles_text">No Vehicles Found</string>
     <string name="error_loading_dealerships">Unable to load dealerships from server. Please try again.</string>
     <string name="error_loading_vehicles">Unable to lead vehicles from server. Please try again.</string>
+    <string name="vehicle_year_title_text">Year:</string>
+    <string name="vehicle_make_title_text">Make:</string>
+    <string name="vehicle_model_title_text">Model:</string>
+    <string name="vehicle_id_title_text">Vehicle id:</string>
+    <string name="dealerid_title_text">Dealership id:</string>
+    <string name="dealership_name_title_text">Name:</string>
 </resources>

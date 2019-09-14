@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/vehicleYearTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/vehicle_year_title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/vehicleYearTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="2001"
+        app:layout_constraintStart_toEndOf="@+id/vehicleYearTitleTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/vehicleMakeTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/vehicle_make_title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vehicleYearTitleTextView" />
+
+    <TextView
+        android:id="@+id/vehicleMakeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="Honda"
+        app:layout_constraintStart_toEndOf="@+id/vehicleMakeTitleTextView"
+        app:layout_constraintTop_toTopOf="@+id/vehicleMakeTitleTextView" />
+
+    <TextView
+        android:id="@+id/vehicleModelTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/vehicle_model_title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vehicleMakeTitleTextView" />
+
+    <TextView
+        android:id="@+id/vehicleModelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="Accord"
+        app:layout_constraintStart_toEndOf="@+id/vehicleModelTitleTextView"
+        app:layout_constraintTop_toTopOf="@+id/vehicleModelTitleTextView" />
+
+    <TextView
+        android:id="@+id/vehicleIdTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/vehicle_id_title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vehicleModelTitleTextView" />
+
+    <TextView
+        android:id="@+id/vehicleIdTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="1"
+        app:layout_constraintStart_toEndOf="@+id/vehicleIdTitleTextView"
+        app:layout_constraintTop_toTopOf="@+id/vehicleIdTitleTextView" />
+
+    <TextView
+        android:id="@+id/dealershipIdTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:text="@string/dealerid_title_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vehicleIdTitleTextView" />
+
+    <TextView
+        android:id="@+id/dealershipIdTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="2"
+        app:layout_constraintStart_toEndOf="@+id/dealershipIdTitleTextView"
+        app:layout_constraintTop_toTopOf="@+id/dealershipIdTitleTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

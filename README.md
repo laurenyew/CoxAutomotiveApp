@@ -1,6 +1,6 @@
 # CoxAutomotiveApp
 
-Requirements:
+## Requirements:
 The app should persist dealer and vehicle data and load that cached data when possible (assume individual dealer and vehicle records provided by API are immutable)
 
 The app will have 3 screens:
@@ -15,7 +15,7 @@ Vehicle id
 Dealership id
  
 
-Fetching data:
+## Fetching data:
 
 Call get /api/datasetId to get a dataSetId 
 2.       Use the datasetId to fetch the dealerships and vehicles for that data set
@@ -26,7 +26,7 @@ b.       For each id from the vehicleIds list, call /api/{datasetId}/vehicle/{ve
 
 c.       The vehicle info contains the dealershipId to call /api/{datasetId}/dealers/{dealerId} to get the dealership info.  Make sure to only fetch the dealership data once from all the vehicles. 
 
-Libraries Used:
+## Libraries Used:
 * Retrofit
 * Jetpack Navigation
 * LiveData

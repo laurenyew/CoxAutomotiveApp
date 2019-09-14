@@ -14,7 +14,7 @@ class GetVehicleIdsCommand(private val dataSetId: String) : BaseNetworkCommand()
     @Throws(RuntimeException::class)
     suspend fun execute(): List<Int> {
         val deferred = async {
-            Log.d(TAG, "Executing $TAG")
+            Log.d(TAG, "Executing $TAG for dataSetId: $dataSetId")
             val call = api?.getVehicleIds(dataSetId)
             try {
                 val response = call?.execute()

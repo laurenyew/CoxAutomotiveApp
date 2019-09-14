@@ -3,12 +3,14 @@ package laurenyew.coxautomotiveapp.models
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import laurenyew.coxautomotiveapp.data.*
+import laurenyew.coxautomotiveapp.data.Dealership
+import laurenyew.coxautomotiveapp.data.DealershipDao
+import laurenyew.coxautomotiveapp.data.Vehicle
+import laurenyew.coxautomotiveapp.data.VehicleDao
 import laurenyew.coxautomotiveapp.networking.commands.GetDataSetIdCommand
 import laurenyew.coxautomotiveapp.networking.commands.GetDealershipDetailCommand
 import laurenyew.coxautomotiveapp.networking.commands.GetVehicleDetailCommand
@@ -23,9 +25,8 @@ class DealershipVehicleRepository(
     private val vehicleDao: VehicleDao,
     private val scope: CoroutineScope
 ) {
-    var status: MutableLiveData<Status> = MutableLiveData()
-
-    val allDealerships: LiveData<List<Dealership>> = dealershipDao.getAllDealershps()
+    private var dealershipIds = HashSet<Int>()
+    val allDealerships: LiveData<List<Dealership>> = dealershipDao.getAllDealerships()
 
     fun vehiclesForDealership(dealershipId: Int): LiveData<List<Vehicle>> =
         vehicleDao.getAllVehiclesForDealership(dealershipId)
@@ -41,7 +42,6 @@ class DealershipVehicleRepository(
      * If any of these fail, update the status for the error
      */
     fun loadDealershipVehicleData() {
-        status.value = Status(true, null)
         scope.launch {
             try {
                 withContext(Dispatchers.IO) {
@@ -50,31 +50,12 @@ class DealershipVehicleRepository(
 
                     //Get all the vehicles
                     val vehicleIds = getVehicleIds(dataSetId)
-                    var dealershipIds = hashSetOf<Int>()
                     vehicleIds.forEach { vehicleId ->
-                        val vehicleDetail = getVehicleDetail(dataSetId, vehicleId)
-                        val dealerId = vehicleDetail.dealerId
-                        if (!dealershipIds.contains(dealerId)) {
-                            //Get all the dealerships (this can be launched in parallel)
-                            scope.launch {
-                                val dealershipDetail =
-                                    getDealershipDetail(dataSetId, dealerId)
-                                //Insert Dealership Detail into the database
-                                insert(dealershipDetail)
-                            }
-                        }
-                        //Add to our dealership id set
-                        dealershipIds.add(dealerId)
-
-                        //Insert the vehicle detail into the database
-                        insert(vehicleDetail)
+                        loadVehicleDetails(dataSetId, vehicleId)
                     }
-
-                    status.postValue(Status(false, null))
                 }
             } catch (ex: Exception) {
-                Log.d(TAG, "Error: Unable to Load Dealership Vehicle Data: ${ex.message}")
-                status.postValue(Status(false, ex))
+                Log.e(TAG, "Error: Unable to Load Dealership Vehicle Data: ${ex.message}")
             }
         }
     }
@@ -86,11 +67,43 @@ class DealershipVehicleRepository(
      * (remove / update items)
      */
     private fun resetDatabase() {
+        dealershipIds.clear()
         dealershipDao.deleteAll()
         vehicleDao.deleteAll()
     }
 
     //region Networking calls
+    /**
+     * Load the vehicle details and load the dealership's details
+     */
+    private suspend fun loadVehicleDetails(dataSetId: String, vehicleId: Int) {
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                val vehicleDetail = getVehicleDetail(dataSetId, vehicleId)
+                val dealerId = vehicleDetail.dealerId
+
+                if (updateDealerIdsWithUniqueId(dealerId)) {
+                    loadDealershipDetails(dataSetId, dealerId)
+                }
+
+                //Insert the vehicle detail into the database
+                insert(vehicleDetail)
+            }
+        }
+    }
+
+    private suspend fun loadDealershipDetails(dataSetId: String, dealerId: Int) {
+        //Get all the dealerships (this can be launched in parallel)
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                val dealershipDetail =
+                    getDealershipDetail(dataSetId, dealerId)
+                //Insert Dealership Detail into the database
+                insert(dealershipDetail)
+            }
+        }
+    }
+
     /**
      * Make a network call to get the dataSetId
      */
@@ -161,6 +174,21 @@ class DealershipVehicleRepository(
                 vehicleDao.insert(vehicle)
             }
         }
+    }
+    //endregion
+
+    //region Concurrency State
+    /**
+     * Update the dealer ids set w/ dealer id
+     * @return true if this was a unique dealerId, false otherwise
+     */
+    @Synchronized
+    private fun updateDealerIdsWithUniqueId(dealerId: Int): Boolean {
+        val hasUniqueDealerId = !dealershipIds.contains(dealerId)
+        if (hasUniqueDealerId) {
+            dealershipIds.add(dealerId)
+        }
+        return hasUniqueDealerId
     }
     //endregion
 

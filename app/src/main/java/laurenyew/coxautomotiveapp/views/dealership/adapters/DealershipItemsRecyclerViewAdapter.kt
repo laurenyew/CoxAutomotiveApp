@@ -18,7 +18,7 @@ import kotlin.coroutines.CoroutineContext
  * RecyclerViewAdapter for showing the dealership items
  * With performance updates (update only parts of list that have changed)
  */
-class DealershipItemsRecyclerViewAdapter(private val dealerItemClicked: (dealerId: Int) -> Unit) :
+class DealershipItemsRecyclerViewAdapter(private val dealerItemClicked: (dealerId: Int, dealerName: String) -> Unit) :
     RecyclerView.Adapter<DealershipItemViewHolder>(), CoroutineScope {
 
     private val job = Job()
@@ -109,7 +109,7 @@ class DealershipItemsRecyclerViewAdapter(private val dealerItemClicked: (dealerI
         holder.dealershipItemIdTextView.text = item.id.toString()
         holder.dealershipItemNameTextView.text = item.name
         holder.view.setOnClickListener {
-            dealerItemClicked(item.id)
+            dealerItemClicked(item.id, item.name)
         }
     }
 

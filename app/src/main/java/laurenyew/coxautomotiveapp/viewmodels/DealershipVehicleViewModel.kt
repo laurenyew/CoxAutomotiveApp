@@ -4,7 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import laurenyew.coxautomotiveapp.data.*
+import laurenyew.coxautomotiveapp.data.Dealership
+import laurenyew.coxautomotiveapp.data.DealershipRoomDatabase
+import laurenyew.coxautomotiveapp.data.Vehicle
+import laurenyew.coxautomotiveapp.data.VehicleRoomDatabase
 import laurenyew.coxautomotiveapp.models.DealershipVehicleRepository
 
 /**
@@ -15,15 +18,12 @@ class DealershipVehicleViewModel(application: Application) : AndroidViewModel(ap
     private val repository: DealershipVehicleRepository
     val dealerships: LiveData<List<Dealership>>
 
-    val status: LiveData<Status>
-
     init {
         val dealershipDao =
             DealershipRoomDatabase.getDatabase(application, viewModelScope).dealershipDao()
         val vehicleDao = VehicleRoomDatabase.getDatabase(application, viewModelScope).vehicleDao()
         repository = DealershipVehicleRepository(dealershipDao, vehicleDao, viewModelScope)
         dealerships = repository.allDealerships
-        status = repository.status
     }
 
     fun vehiclesForDealership(dealerId: Int): LiveData<List<Vehicle>> =

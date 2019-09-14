@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,9 +13,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_dealerships_list.*
 import laurenyew.coxautomotiveapp.R
+import laurenyew.coxautomotiveapp.data.Dealership
 import laurenyew.coxautomotiveapp.viewmodels.DealershipVehicleViewModel
 import laurenyew.coxautomotiveapp.views.dealership.adapters.DealershipItemsRecyclerViewAdapter
 import laurenyew.coxautomotiveapp.views.vehicles.VehicleListFragment.Companion.ARG_DEALERSHIP_ID_PARAM
+import laurenyew.coxautomotiveapp.views.vehicles.VehicleListFragment.Companion.ARG_DEALERSHIP_NAME_PARAM
 
 /**
  * Shows the dealership list
@@ -24,7 +25,14 @@ import laurenyew.coxautomotiveapp.views.vehicles.VehicleListFragment.Companion.A
 class DealershipsListFragment : Fragment() {
 
     private lateinit var dealershipViewModel: DealershipVehicleViewModel
-    private var adapter: DealershipItemsRecyclerViewAdapter? = null
+    private var dealershipAdapter: DealershipItemsRecyclerViewAdapter? = null
+
+    private val dealershipsObserver = Observer<List<Dealership>> {
+        dealershipAdapter?.updateData(it)
+        val isEmpty = it.isEmpty()
+        loadingProgressBar.visibility = if (isEmpty) View.VISIBLE else View.INVISIBLE
+        emptyTextView.visibility = if (isEmpty) View.VISIBLE else View.INVISIBLE
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +51,18 @@ class DealershipsListFragment : Fragment() {
 
         loadingProgressBar.visibility = View.VISIBLE
 
+        dealershipAdapter =
+            DealershipItemsRecyclerViewAdapter(dealerItemClicked = { dealerId, dealerName ->
+                val bundle = bundleOf(
+                    ARG_DEALERSHIP_ID_PARAM to dealerId,
+                    ARG_DEALERSHIP_NAME_PARAM to dealerName
+                )
+                findNavController().navigate(
+                    R.id.action_dealershipsListFragment_to_vehicleListFragment,
+                    bundle
+                )
+            })
+
         dealershipsListRecyclerView.apply {
             val linearLayoutManager = LinearLayoutManager(context)
             layoutManager = linearLayoutManager
@@ -50,43 +70,21 @@ class DealershipsListFragment : Fragment() {
             val dividerItemDecoration =
                 DividerItemDecoration(context, linearLayoutManager.orientation)
             addItemDecoration(dividerItemDecoration)
+            adapter = dealershipAdapter
         }
 
         //Setup state
-        dealershipViewModel.dealerships.observe(this, Observer {
-            if (adapter == null) {
-                adapter = DealershipItemsRecyclerViewAdapter(dealerItemClicked = { dealerId ->
-                    var bundle = bundleOf(ARG_DEALERSHIP_ID_PARAM to dealerId)
-                    findNavController().navigate(
-                        R.id.action_dealershipsListFragment_to_vehicleListFragment,
-                        bundle
-                    )
-                })
-                dealershipsListRecyclerView.adapter = adapter
-            }
-            adapter?.updateData(it)
-            emptyTextView.visibility =
-                if (it.isEmpty()
-                    && dealershipViewModel.status.value?.loading == false
-                ) View.VISIBLE else View.GONE
-        })
-
-        dealershipViewModel.status.observe(this, Observer {
-            loadingProgressBar.visibility = if (it.loading) View.VISIBLE else View.GONE
-            it.error?.let {
-                Toast.makeText(context, R.string.error_loading_dealerships, Toast.LENGTH_LONG)
-                    .show()
-            }
-        })
+        dealershipViewModel.dealerships.observe(viewLifecycleOwner, dealershipsObserver)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        adapter?.onDestroy()
+        dealershipAdapter?.onDestroy()
+        dealershipViewModel.dealerships.removeObserver(dealershipsObserver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        adapter = null
+        dealershipAdapter = null
     }
 }

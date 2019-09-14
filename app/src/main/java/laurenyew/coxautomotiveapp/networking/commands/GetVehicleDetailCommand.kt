@@ -16,7 +16,7 @@ class GetVehicleDetailCommand(private val dataSetId: String, private val vehicle
     @Throws(RuntimeException::class)
     suspend fun execute(): Vehicle {
         val deferred = async {
-            Log.d(TAG, "Executing $TAG")
+            Log.d(TAG, "Executing $TAG for vehicleId: $vehicleId")
             val call = api?.getVehicleDetail(dataSetId, vehicleId)
             try {
                 val response = call?.execute()

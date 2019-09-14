@@ -16,7 +16,7 @@ class GetDealershipDetailCommand(private val dataSetId: String, private val deal
     @Throws(RuntimeException::class)
     suspend fun execute(): Dealership {
         val deferred = async {
-            Log.d(TAG, "Executing $TAG")
+            Log.d(TAG, "Executing $TAG for dealerId: $dealerId")
             val call = api?.getDealershipDetail(dataSetId, dealerId)
             try {
                 val response = call?.execute()

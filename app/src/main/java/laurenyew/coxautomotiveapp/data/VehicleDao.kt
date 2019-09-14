@@ -3,6 +3,7 @@ package laurenyew.coxautomotiveapp.data
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 /**
@@ -10,7 +11,7 @@ import androidx.room.Query
  */
 @Dao
 interface VehicleDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(vehicle: Vehicle)
 
     @Query("DELETE FROM vehicle_table")

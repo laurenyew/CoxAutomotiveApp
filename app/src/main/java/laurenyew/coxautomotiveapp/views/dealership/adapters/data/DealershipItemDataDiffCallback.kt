@@ -1,6 +1,7 @@
 package laurenyew.coxautomotiveapp.views.dealership.adapters.data
 
 import androidx.recyclerview.widget.DiffUtil
+import laurenyew.coxautomotiveapp.data.Dealership
 
 /**
  * @author Lauren Yew
@@ -8,8 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
  * DiffUtil.Callback that compares data wrappers
  */
 open class DealershipItemDataDiffCallback(
-    private val oldData: List<DealershipItemDataWrapper>?,
-    private val newData: List<DealershipItemDataWrapper>?
+    private val oldData: List<Dealership>?,
+    private val newData: List<Dealership>?
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldData?.size ?: 0
 

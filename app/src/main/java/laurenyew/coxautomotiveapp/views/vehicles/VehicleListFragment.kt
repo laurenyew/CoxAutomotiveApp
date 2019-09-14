@@ -1,4 +1,4 @@
-package laurenyew.coxautomotiveapp.views
+package laurenyew.coxautomotiveapp.views.vehicles
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,6 +23,10 @@ class VehicleListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_vehicle_list, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
 
     companion object {
         @JvmStatic

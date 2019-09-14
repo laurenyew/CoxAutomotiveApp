@@ -2,7 +2,7 @@ package laurenyew.coxautomotiveapp.networking.commands
 
 import android.util.Log
 import kotlinx.coroutines.async
-import laurenyew.coxautomotiveapp.models.VehicleDetailModel
+import laurenyew.coxautomotiveapp.data.Vehicle
 import laurenyew.coxautomotiveapp.networking.api.response.VehicleItemResponse
 import retrofit2.Response
 
@@ -14,7 +14,7 @@ class GetVehicleDetailCommand(private val dataSetId: String, private val vehicle
     BaseNetworkCommand() {
 
     @Throws(RuntimeException::class)
-    suspend fun execute(): VehicleDetailModel {
+    suspend fun execute(): Vehicle {
         val deferred = async {
             Log.d(TAG, "Executing $TAG")
             val call = api?.getVehicleDetail(dataSetId, vehicleId)
@@ -33,12 +33,18 @@ class GetVehicleDetailCommand(private val dataSetId: String, private val vehicle
      * Parse the response from the network call
      */
     @Throws(RuntimeException::class)
-    private fun parseResponse(response: Response<VehicleItemResponse>?): VehicleDetailModel {
+    private fun parseResponse(response: Response<VehicleItemResponse>?): Vehicle {
         val data = response?.body()
         if (response?.code() != 200 || data == null) {
             throw RuntimeException("API call failed. Unable to find vehicle detail for id: $vehicleId")
         } else {
-            return VehicleDetailModel(data.id, data.year, data.make, data.model, data.dealerId)
+            return Vehicle(
+                data.id,
+                data.year,
+                data.make,
+                data.model,
+                data.dealerId
+            )
         }
     }
 

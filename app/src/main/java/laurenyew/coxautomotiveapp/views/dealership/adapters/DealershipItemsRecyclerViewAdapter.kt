@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
 import laurenyew.coxautomotiveapp.R
+import laurenyew.coxautomotiveapp.data.Dealership
 import laurenyew.coxautomotiveapp.views.dealership.adapters.data.DealershipItemDataDiffCallback
-import laurenyew.coxautomotiveapp.views.dealership.adapters.data.DealershipItemDataWrapper
 import laurenyew.coxautomotiveapp.views.dealership.adapters.viewholder.DealershipItemViewHolder
 import java.util.*
 import kotlin.coroutines.CoroutineContext
@@ -22,14 +22,14 @@ class DealershipItemsRecyclerViewAdapter :
     RecyclerView.Adapter<DealershipItemViewHolder>(), CoroutineScope {
 
     private val job = Job()
-    private var data: MutableList<DealershipItemDataWrapper> = ArrayList()
-    private var pendingDataUpdates = ArrayDeque<List<DealershipItemDataWrapper>>()
+    private var data: MutableList<Dealership> = ArrayList()
+    private var pendingDataUpdates = ArrayDeque<List<Dealership>>()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + job
 
     //RecyclerView Diff.Util (List Updates)
-    fun updateData(newData: List<DealershipItemDataWrapper>?) {
+    fun updateData(newData: List<Dealership>?) {
         if (isActive) {
             val data = newData ?: ArrayList()
             pendingDataUpdates.add(data)
@@ -49,7 +49,7 @@ class DealershipItemsRecyclerViewAdapter :
      * Handle the diff util update on a background thread
      * (this can take O(n) time so we don't want it on the main thread)
      */
-    private fun updateDataInternal(newData: List<DealershipItemDataWrapper>?) {
+    private fun updateDataInternal(newData: List<Dealership>?) {
         val oldData = ArrayList(data)
 
         launch {
@@ -68,7 +68,7 @@ class DealershipItemsRecyclerViewAdapter :
      * and take in the latest update
      */
     private fun applyDataDiffResult(
-        newData: List<DealershipItemDataWrapper>?,
+        newData: List<Dealership>?,
         diffResult: DiffUtil.DiffResult
     ) {
         if (pendingDataUpdates.isNotEmpty()) {
@@ -91,8 +91,8 @@ class DealershipItemsRecyclerViewAdapter :
     }
 
     private fun createDataDiffCallback(
-        oldData: List<DealershipItemDataWrapper>?,
-        newData: List<DealershipItemDataWrapper>?
+        oldData: List<Dealership>?,
+        newData: List<Dealership>?
     ): DiffUtil.Callback =
         DealershipItemDataDiffCallback(oldData, newData)
     //endregion
@@ -106,7 +106,7 @@ class DealershipItemsRecyclerViewAdapter :
 
     override fun onBindViewHolder(holder: DealershipItemViewHolder, position: Int) {
         val item = data[position]
-        holder.dealershipItemIdTextView.text = item.id
+        holder.dealershipItemIdTextView.text = item.id.toString()
         holder.dealershipItemNameTextView.text = item.name
     }
 

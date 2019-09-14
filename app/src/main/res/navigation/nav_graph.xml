@@ -25,7 +25,7 @@
     </fragment>
     <fragment
             android:id="@+id/vehicleListFragment"
-            android:name="laurenyew.coxautomotiveapp.views.VehicleListFragment"
+            android:name="laurenyew.coxautomotiveapp.views.vehicles.VehicleListFragment"
             android:label="fragment_vehicle_list"
             tools:layout="@layout/fragment_vehicle_list" />
 </navigation>

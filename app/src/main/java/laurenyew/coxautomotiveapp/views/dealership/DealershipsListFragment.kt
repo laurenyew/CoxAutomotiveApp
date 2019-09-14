@@ -5,15 +5,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_dealerships_list.*
 import laurenyew.coxautomotiveapp.R
+import laurenyew.coxautomotiveapp.viewmodels.DealershipVehicleViewModel
+import laurenyew.coxautomotiveapp.views.dealership.adapters.DealershipItemsRecyclerViewAdapter
 
 /**
  * Shows the dealership list
  */
 class DealershipsListFragment : Fragment() {
+
+    private lateinit var dealershipViewModel: DealershipVehicleViewModel
+    private var adapter: DealershipItemsRecyclerViewAdapter? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        dealershipViewModel =
+            ViewModelProviders.of(this).get(DealershipVehicleViewModel::class.java)
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,6 +46,17 @@ class DealershipsListFragment : Fragment() {
             val dividerItemDecoration =
                 DividerItemDecoration(context, linearLayoutManager.orientation)
             addItemDecoration(dividerItemDecoration)
+
+
         }
+
+        //Setup state
+        dealershipViewModel.dealerships.observe(this, Observer {
+            if (adapter == null) {
+                adapter = DealershipItemsRecyclerViewAdapter()
+                dealershipsListRecyclerView.adapter = adapter
+            }
+            adapter?.updateData(it)
+        })
     }
 }

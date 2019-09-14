@@ -2,7 +2,7 @@ package laurenyew.coxautomotiveapp.networking.commands
 
 import android.util.Log
 import kotlinx.coroutines.async
-import laurenyew.coxautomotiveapp.models.DealershipDetailModel
+import laurenyew.coxautomotiveapp.data.Dealership
 import laurenyew.coxautomotiveapp.networking.api.response.DealershipItemResponse
 import retrofit2.Response
 
@@ -14,7 +14,7 @@ class GetDealershipDetailCommand(private val dataSetId: String, private val deal
     BaseNetworkCommand() {
 
     @Throws(RuntimeException::class)
-    suspend fun execute(): DealershipDetailModel {
+    suspend fun execute(): Dealership {
         val deferred = async {
             Log.d(TAG, "Executing $TAG")
             val call = api?.getDealershipDetail(dataSetId, dealerId)
@@ -33,12 +33,12 @@ class GetDealershipDetailCommand(private val dataSetId: String, private val deal
      * Parse the response from the network call
      */
     @Throws(RuntimeException::class)
-    private fun parseResponse(response: Response<DealershipItemResponse>?): DealershipDetailModel {
+    private fun parseResponse(response: Response<DealershipItemResponse>?): Dealership {
         val data = response?.body()
         if (response?.code() != 200 || data == null) {
             throw RuntimeException("API call failed. Unable to find dealership for id $dealerId")
         } else {
-            return DealershipDetailModel(data.id, data.name)
+            return Dealership(data.id, data.name)
         }
     }
 

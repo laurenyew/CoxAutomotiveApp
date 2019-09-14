@@ -25,6 +25,7 @@ class DealershipVehicleRepository(
     private val vehicleDao: VehicleDao,
     private val scope: CoroutineScope
 ) {
+    private var savedDatasetId: String? = null
     private var dealershipIds = HashSet<Int>()
     val allDealerships: LiveData<List<Dealership>> = dealershipDao.getAllDealerships()
 
@@ -45,13 +46,20 @@ class DealershipVehicleRepository(
         scope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    resetDatabase()
+
                     val dataSetId = getDataSetId()
 
-                    //Get all the vehicles
-                    val vehicleIds = getVehicleIds(dataSetId)
-                    vehicleIds.forEach { vehicleId ->
-                        loadVehicleDetails(dataSetId, vehicleId)
+                    //Reload the database if necessary (assuming if have same data set id, data set has not changed)
+                    if (!isSavedDataset(dataSetId)) {
+                        Log.d(TAG, "New DataSetId: $dataSetId! Reloading database.")
+                        savedDatasetId = dataSetId
+                        resetDatabase()
+
+                        //Get all the vehicles
+                        val vehicleIds = getVehicleIds(dataSetId)
+                        vehicleIds.forEach { vehicleId ->
+                            loadVehicleDetails(dataSetId, vehicleId)
+                        }
                     }
                 }
             } catch (ex: Exception) {
@@ -59,6 +67,8 @@ class DealershipVehicleRepository(
             }
         }
     }
+
+    private fun isSavedDataset(dataSetId: String) = dataSetId == savedDatasetId
 
     /**
      * Make sure to reset database (clearing all for this POC)
